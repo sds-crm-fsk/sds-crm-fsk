@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
@@ -581,7 +581,7 @@
       <select id="crmFilterRegion" onchange="renderCrmTable()"><option value="">Все регионы</option></select>
       <select id="crmFilterCity" onchange="renderCrmTable()"><option value="">Все города</option></select>
       <select id="crmFilterOffice" onchange="renderCrmTable()"><option value="">Все офисы</option></select>
-            <select id="crmFilterDistributor" onchange="renderCrmTable()">
+      <select id="crmFilterDistributor" onchange="renderCrmTable()">
         <option value="">Все дистрибьюторы</option>
         <option value="ЭТМ">ЭТМ</option>
         <option value="РС">Русский Свет (РС)</option>
@@ -1427,6 +1427,7 @@ function showSelectionCards() {
   emailEls.forEach(el => { el.textContent = displayName; el.title = state.email || ''; });
   const roleEls = document.querySelectorAll('#headerRole, #headerRole2, #headerRole3, #headerRole4, #headerRole5, #headerRoleHelp, #headerRoleDash');
   roleEls.forEach(el => el.textContent = roleLabel(state.role));
+  
   const isAdmin = state.role === 'admin';
   document.getElementById('cardEtm').style.display = (state.role === 'admin' || state.role === 'kam_etm') ? '' : 'none';
   document.getElementById('cardRs').style.display = (state.role === 'admin' || state.role === 'kam_rs') ? '' : 'none';
@@ -1436,8 +1437,10 @@ function showSelectionCards() {
   document.getElementById('taskColHeader').style.display = '';
   document.getElementById('checkColHeader').style.display = isAdmin ? '' : 'none';
   document.getElementById('reassignColHeader').style.display = isAdmin ? '' : 'none';
-    document.getElementById('newTaskBtn').style.display = '';
+  document.getElementById('newTaskBtn').style.display = '';
   document.getElementById('massTaskBtn').style.display = isAdmin ? '' : 'none';
+
+  // ФИКС: Управление видимостью фильтра по РП
   const authorFilterEl = document.getElementById('crmFilterAuthor');
   if (authorFilterEl) {
     const canFilterByRp = isAdmin || state.role === 'kam_etm' || state.role === 'kam_rs';
@@ -1641,6 +1644,7 @@ async function apiGet(params) {
   const res = await fetch(url);
   return await res.json();
 }
+
 /* ================= PICKER WIDGET ================= */
 function createPickerWidget(opts) {
   const { key, inputId, chipsId, dropdownId, containerId, getOptions, onChange, allowSelf } = opts;
@@ -1732,12 +1736,10 @@ function createPickerWidget(opts) {
 
 /* ================= ИНИЦИАЛИЗАЦИЯ ================= */
 window.addEventListener('DOMContentLoaded', async () => {
-  // Страховка: если что-то пойдет не так, заставка скроется через 3 секунды
   setTimeout(() => {
     const splash = document.getElementById('splashScreen');
     if (splash && !splash.classList.contains('hidden')) {
       splash.classList.add('hidden');
-      // Если мы не в приложении и не на экране входа, покажем вход
       if (document.getElementById('authScreen').classList.contains('hidden') && document.getElementById('app').classList.contains('hidden')) {
         showScreen('authScreen');
         switchAuthTab('login');
@@ -1886,16 +1888,14 @@ function openPhotoViewer() {
   const counter = document.getElementById('photoCounter'); 
   const prevBtn = document.getElementById('photoPrevBtn'); 
   const nextBtn = document.getElementById('photoNextBtn');
-  const downloadBtn = document.getElementById('photoDownloadBtn'); // Наша новая кнопка
+  const downloadBtn = document.getElementById('photoDownloadBtn');
 
   if (viewerPhotos.length === 0) return;
   const p = viewerPhotos[viewerIndex];
   
-  // Если это картинка — показываем превью. Если документ — показываем иконку-заглушку
   const isImage = p.url && p.url.includes('thumbnail') || (p.data && p.data.startsWith('data:image/'));
   img.src = p.url ? p.url.replace(/sz=w\d+/, 'sz=w2000') : (p.data || p.full || '');
   
-  // Настраиваем кнопку скачивания (используем прямую ссылку Google Диска)
   if (p.id) {
     downloadBtn.href = `https://drive.google.com/uc?export=download&id=${p.id}`;
   } else {
@@ -1934,7 +1934,7 @@ async function submitCRM() {
   if (!isValidInnClient(inn)) { document.getElementById('crmInnGroup').classList.add('has-error'); document.getElementById('crmInn').classList.add('input-error'); alert('Неверный ИНН. Проверьте формат (10 или 12 цифр) и контрольную сумму.'); return; }
   if (!city) { alert('Введите город'); return; }
   if (!office) { alert('Введите офис продаж'); return; }
-  if (!region) { alert('Введите регион'); document.getElementById('crmRegion').focus(); return; } // НОВАЯ ПРОВЕРКА
+  if (!region) { alert('Введите регион'); document.getElementById('crmRegion').focus(); return; }
 
   if (editingId) {
     const existing = crmCache.find(x => String(x.id) === String(editingId));
@@ -2145,7 +2145,6 @@ function getFilteredAndSortedData() {
   const sort = document.getElementById('crmSort').value;
   const today = new Date(); today.setHours(0,0,0,0); 
   
-  // Правильный расчет текущей недели
   const dayOfWeek = today.getDay() || 7; 
   const startOfWeek = new Date(today);
   startOfWeek.setDate(today.getDate() - dayOfWeek + 1); 
@@ -2171,7 +2170,6 @@ function getFilteredAndSortedData() {
         d.setHours(0,0,0,0);
         if (dl === 'overdue' && !(d < today)) return false;
         if (dl === 'today' && d.getTime() !== today.getTime()) return false;
-        // Теперь проверяем строго в рамках текущей календарной недели
         if (dl === 'week' && !(d >= startOfWeek && d <= endOfWeek)) return false;
       } else return false;
     }
@@ -2191,6 +2189,7 @@ function getFilteredAndSortedData() {
   return list;
 }
 function applyDeadlineFilter(kind) { const sel = document.getElementById('crmFilterDeadline'); if (sel.value === kind) sel.value = ''; else sel.value = kind; renderCrmTable(); }
+
 function populateAuthorFilter() {
   const select = document.getElementById('crmFilterAuthor');
   if (!select) return;
@@ -2300,7 +2299,6 @@ function renderCrmTable() {
   officeSelect.innerHTML = '<option value="">Все офисы</option>' + offices.map(o => `<option value="${escapeHtml(o)}"${o === curOffice ? ' selected' : ''}>${escapeHtml(o)}</option>`).join('');
   updateSelectionBar(); setTimeout(setupTableScroll, 0);
 }
-
 /* ================= ДАШБОРД ================= */
 async function loadDashboard() {
   const status = document.getElementById('dashboardStatus'); const period = document.getElementById('dashPeriod').value;
@@ -2412,19 +2410,11 @@ async function loadTasks() {
       if (t.author) authors.add(t.author);
       String(t.assignee || '').split(',').forEach(e => { if (e.trim()) assignees.add(e.trim()); });
     });
-        const authorSel = document.getElementById('taskFilterAuthor');
+    const authorSel = document.getElementById('taskFilterAuthor');
     const assigneeSel = document.getElementById('taskFilterAssignee');
     const curAuthor = authorSel.value, curAssignee = assigneeSel.value;
-    
-    // Функция для сортировки по Имени и Фамилии
-    const sortByName = (a, b) => {
-        const nameA = getUserDisplayName(a);
-        const nameB = getUserDisplayName(b);
-        return nameA.localeCompare(nameB, 'ru');
-    };
-
-    authorSel.innerHTML = '<option value="">Все авторы</option>' + [...authors].sort(sortByName).map(e => `<option value="${escapeHtml(e)}" ${e === curAuthor ? 'selected' : ''}>${escapeHtml(getUserDisplayName(e))}</option>`).join('');
-    assigneeSel.innerHTML = '<option value="">Все исполнители</option>' + [...assignees].sort(sortByName).map(e => `<option value="${escapeHtml(e)}" ${e === curAssignee ? 'selected' : ''}>${escapeHtml(getUserDisplayName(e))}</option>`).join('');
+    authorSel.innerHTML = '<option value="">Все авторы</option>' + [...authors].sort().map(e => '<option value="' + escapeHtml(e) + '" ' + (e === curAuthor ? 'selected' : '') + '>' + escapeHtml(getUserDisplayName(e)) + '</option>').join('');
+    assigneeSel.innerHTML = '<option value="">Все исполнители</option>' + [...assignees].sort().map(e => '<option value="' + escapeHtml(e) + '" ' + (e === curAssignee ? 'selected' : '') + '>' + escapeHtml(getUserDisplayName(e)) + '</option>').join('');
     status.className = 'status-badge online'; status.textContent = '✅ Задач: ' + tasksCache.length;
     renderTasksTable();
   } catch (e) { status.className = 'status-badge offline'; status.textContent = '❌ ' + e.message; }
@@ -2455,7 +2445,7 @@ function renderTasksTable() {
     if (statusF && normalizeStatus(t.status) !== normalizeStatus(statusF)) return false;
     if (authorF && t.author !== authorF) return false;
     if (assigneeF && !String(t.assignee || '').split(',').map(s=>s.trim()).includes(assigneeF)) return false;
-    if (q && !(t.text.toLowerCase().includes(q) || t.assignee.toLowerCase().includes(q) || t.author.toLowerCase().includes(q) || (t.result && t.result.toLowerCase().includes(q)))) return false;
+    if (q && !(t.text.toLowerCase().includes(q) || (t.assignee || '').toLowerCase().includes(q) || t.author.toLowerCase().includes(q) || (t.result && t.result.toLowerCase().includes(q)))) return false;
     if (deadlineF) {
       if (deadlineF === 'none') { if (t.deadline && t.deadline !== '—') return false; }
       else if (t.deadline && t.deadline !== '—') {
@@ -2886,12 +2876,14 @@ function renderPlan() {
   document.getElementById('toggleLineBtn').addEventListener('click', function() { const w = document.getElementById('lineChartWrapper'); const willShow = w.classList.contains('hidden'); w.classList.toggle('hidden'); this.textContent = w.classList.contains('hidden') ? '📈 Показать график динамики (кривые)' : '📉 Скрыть график динамики'; if (willShow) renderLineChart(document.getElementById('lineChartContainer'), data.chartData); });
   if (document.getElementById('toggleClientsBtn')) { document.getElementById('toggleClientsBtn').addEventListener('click', function() { const w = document.getElementById('clientsWrapper'); w.classList.toggle('hidden'); this.textContent = w.classList.contains('hidden') ? '👥 Показать таблицу клиентов' : '📉 Скрыть таблицу клиентов'; }); }
 }
+
+/* ИСПРАВЛЕННЫЙ renderBarChart (без обратных кавычек) */
 function renderBarChart(container, data) {
   if (!container) return; 
   const W = 900, H = 320, pad = { l: 70, r: 20, t: 20, b: 40 }; 
   const innerW = W - pad.l - pad.r, innerH = H - pad.t - pad.b;
   const allVals = [...data.y2025, ...data.y2026, ...data.y2027]; 
-  const max = Math.max(...allVals) * 1.1; 
+  const max = Math.max(...allVals) * 1.1 || 1; 
   const groupW = innerW / data.labels.length; 
   const barW = groupW * 0.2, gap = groupW * 0.05;
   const colors = ['#94a3b8', '#0070C0', '#10b981']; 
@@ -2927,12 +2919,13 @@ function renderBarChart(container, data) {
   container.innerHTML = svg;
 }
 
+/* ИСПРАВЛЕННЫЙ renderLineChart (без обратных кавычек) */
 function renderLineChart(container, data) {
   if (!container) return; 
   const W = 900, H = 320, pad = { l: 70, r: 30, t: 30, b: 40 }; 
   const innerW = W - pad.l - pad.r, innerH = H - pad.t - pad.b;
   const allVals = [...data.y2025, ...data.y2026, ...data.y2027]; 
-  const max = Math.max(...allVals) * 1.1; 
+  const max = Math.max(...allVals) * 1.1 || 1; 
   const stepX = innerW / (data.labels.length - 1);
   
   const getX = (i) => pad.l + i * stepX; 
@@ -2981,6 +2974,7 @@ function renderLineChart(container, data) {
   svg += '</svg>'; 
   container.innerHTML = svg;
 }
+
 function toggleCrmHelp() { document.getElementById('crmHelpContent').classList.toggle('hidden'); }
 function showTaskSuccessModal(resultText, notifiedUsers) {
   document.getElementById('taskSuccessResultText').textContent = resultText || ''; document.getElementById('taskSuccessResultBlock').style.display = resultText ? 'block' : 'none';
@@ -2990,6 +2984,7 @@ function showTaskSuccessModal(resultText, notifiedUsers) {
   document.getElementById('taskSuccessModal').classList.remove('hidden');
 }
 function closeTaskSuccessModal() { document.getElementById('taskSuccessModal').classList.add('hidden'); }
+
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').then(reg => console.log('Service Worker зарегистрирован!', reg)).catch(err => console.log('Ошибка Service Worker:', err)); });
 }
