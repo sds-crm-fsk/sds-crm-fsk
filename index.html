@@ -2986,7 +2986,7 @@ function showTaskSuccessModal(resultText, notifiedUsers) {
 function closeTaskSuccessModal() { document.getElementById('taskSuccessModal').classList.add('hidden'); }
 
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').then(reg => console.log('Service Worker зарегистрирован!', reg)).catch(err => console.log('Ошибка Service Worker:', err)); });
+  window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').then(reg => console.log('Service Worker зарегистрирован!', reg)).catch(err => console.log('Ошибка Service Worker:', err)); });
 }
 </script>
 </body>
