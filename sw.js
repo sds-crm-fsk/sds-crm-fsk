@@ -1,4 +1,4 @@
-const VERSION = 'v32'; // <-- ОБЯЗАТЕЛЬНО МЕНЯЙТЕ ПРИ КАЖДОМ ОБНОВЛЕНИИ HTML!
+const VERSION = 'v11'; // <-- МЕНЯЙТЕ ЭТУ ЦИФРУ ПРИ КАЖДОМ ОБНОВЛЕНИИ HTML!
 const CACHE_NAME = `sds-crm-${VERSION}`;
 
 const APP_STATIC_RESOURCES = [
@@ -29,7 +29,6 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Не перехватываем запросы к Google Apps Script (база данных)
   if (event.request.url.includes('script.google.com')) return;
 
   // Стратегия "Сеть в первую очередь, кэш — если нет сети"
