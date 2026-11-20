@@ -1,4 +1,4 @@
-const VERSION = 'v51'; // <-- ОБЯЗАТЕЛЬНО МЕНЯЙТЕ ПРИ КАЖДОМ ОБНОВЛЕНИИ HTML!
+const VERSION = 'v52'; // <-- ОБЯЗАТЕЛЬНО МЕНЯЙТЕ ПРИ КАЖДОМ ОБНОВЛЕНИИ HTML!
 const CACHE_NAME = `sds-crm-${VERSION}`;
 
 const APP_STATIC_RESOURCES = [

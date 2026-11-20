@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CRM РП ФСК — SDS (ULTIMATE)</title>
-<link rel="manifest" href="manifest.json">
+<!-- ИСПРАВЛЕН ПУТЬ ДЛЯ GITHUB PAGES -->
+<link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#0070C0">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
@@ -343,7 +344,8 @@
       <div class="auth-howto-content hidden" id="authHowtoContent">
         <h4>Установка приложения</h4>
         <ul>
-          <li><b>Компьютер:</b> ссылка <code>sds-crm-fsk.netlify.app</code> → иконка установки в адресной строке.</li>
+          <li><b>Сайты:</b> <a href="https://sds-crm-fsk.netlify.app/" target="_blank">Netlify</a> или <a href="https://sds-crm-fsk.github.io/sds-crm-fsk/" target="_blank">GitHub Pages</a>.</li>
+          <li><b>Компьютер:</b> откройте сайт → иконка установки в адресной строке.</li>
           <li><b>Android:</b> Chrome → ⋮ → «Установить приложение».</li>
           <li><b>iPhone:</b> Safari → «Поделиться» → «На экран "Домой"».</li>
         </ul>
@@ -375,6 +377,7 @@
         </svg>
       </div>
       <div class="header-user">
+        <button class="btn btn-primary install-btn hidden" onclick="installPWA()" style="margin-right:8px;">📲 Установить</button>
         <span class="email" id="headerEmail" title=""></span>
         <span class="role-badge" id="headerRole"></span>
         <button class="btn btn-outline btn-logout" onclick="logout()">Выйти</button>
@@ -442,6 +445,7 @@
         </svg>
       </div>
       <div class="header-user">
+        <button class="btn btn-primary install-btn hidden" onclick="installPWA()" style="margin-right:8px;">📲 Установить</button>
         <span class="email" id="headerEmail2" title=""></span>
         <span class="role-badge" id="headerRole2"></span>
         <button class="btn btn-outline btn-logout" onclick="logout()">Выйти</button>
@@ -472,6 +476,7 @@
         </svg>
       </div>
       <div class="header-user">
+        <button class="btn btn-primary install-btn hidden" onclick="installPWA()" style="margin-right:8px;">📲 Установить</button>
         <span class="email" id="headerEmail3" title=""></span>
         <span class="role-badge" id="headerRole3"></span>
         <button class="btn btn-outline btn-logout" onclick="logout()">Выйти</button>
@@ -671,6 +676,7 @@
         </svg>
       </div>
       <div class="header-user">
+        <button class="btn btn-primary install-btn hidden" onclick="installPWA()" style="margin-right:8px;">📲 Установить</button>
         <span class="email" id="headerEmailDash" title=""></span>
         <span class="role-badge" id="headerRoleDash"></span>
         <button class="btn btn-outline btn-logout" onclick="logout()">Выйти</button>
@@ -745,6 +751,7 @@
         </svg>
       </div>
       <div class="header-user">
+        <button class="btn btn-primary install-btn hidden" onclick="installPWA()" style="margin-right:8px;">📲 Установить</button>
         <span class="email" id="headerEmail5" title=""></span>
         <span class="role-badge" id="headerRole5"></span>
         <button class="btn btn-outline btn-logout" onclick="logout()">Выйти</button>
@@ -808,6 +815,7 @@
         </svg>
       </div>
       <div class="header-user">
+        <button class="btn btn-primary install-btn hidden" onclick="installPWA()" style="margin-right:8px;">📲 Установить</button>
         <span class="email" id="headerEmailHelp" title=""></span>
         <span class="role-badge" id="headerRoleHelp"></span>
         <button class="btn btn-outline btn-logout" onclick="logout()">Выйти</button>
@@ -822,7 +830,8 @@
     <div class="section-card">
       <h3 class="section-title">1. Установка и вход</h3>
       <ul class="actions-list">
-        <li><b>Компьютер:</b> открыть <b>sds-crm-fsk.netlify.app</b> в Chrome/Edge → иконка установки в адресной строке.</li>
+        <li><b>Сайты:</b> <a href="https://sds-crm-fsk.netlify.app/" target="_blank"><b>sds-crm-fsk.netlify.app</b></a> или <a href="https://sds-crm-fsk.github.io/sds-crm-fsk/" target="_blank"><b>sds-crm-fsk.github.io/sds-crm-fsk</b></a>.</li>
+        <li><b>Компьютер:</b> откройте сайт в Chrome/Edge → иконка установки в адресной строке.</li>
         <li><b>Android:</b> Chrome → ⋮ → «Установить приложение».</li>
         <li><b>iPhone:</b> Safari → «Поделиться» → «На экран "Домой"».</li>
         <li><b>Регистрация:</b> вкладка «Регистрация» → Имя, Фамилия, email, пароль, код из письма. Затем ждите подтверждения администратора.</li>
@@ -877,6 +886,7 @@
         </svg>
       </div>
       <div class="header-user">
+        <button class="btn btn-primary install-btn hidden" onclick="installPWA()" style="margin-right:8px;">📲 Установить</button>
         <span class="email" id="headerEmail4" title=""></span>
         <span class="role-badge" id="headerRole4"></span>
         <button class="btn btn-outline btn-logout" onclick="logout()">Выйти</button>
@@ -907,6 +917,7 @@
 </div>
 
 <!-- ============ MODALS ============ -->
+<!-- Модальные окна (без изменений) -->
 
 <div id="clientHistoryModal" class="modal-overlay hidden">
   <div class="modal-card" style="max-width: 900px;">
@@ -1158,7 +1169,6 @@
   <img id="photoViewerImg" src="" alt="">
   <button class="nav-btn next" id="photoNextBtn" onclick="navPhoto(1)">›</button>
   <div class="counter" id="photoCounter"></div>
-  <!-- НОВАЯ КНОПКА СКАЧИВАНИЯ -->
   <a id="photoDownloadBtn" href="#" target="_blank" style="position: absolute; top: 20px; left: 24px; background: rgba(255,255,255,0.2); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; text-decoration: none; display: flex; align-items: center; gap: 8px;">
     ⬇️ Скачать файл
   </a>
@@ -1180,6 +1190,28 @@ const MAX_FILE_SIZE_KB = 2048;
 const MAX_TOTAL_PENDING_MB = 40;
 const AUTOREFRESH_MS = 15000;
 const SYNC_POLL_MS = 30000;
+
+/* ================= PWA INSTALL LOGIC ================= */
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.querySelectorAll('.install-btn').forEach(btn => btn.classList.remove('hidden'));
+});
+async function installPWA() {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  if (outcome === 'accepted') {
+    document.querySelectorAll('.install-btn').forEach(btn => btn.classList.add('hidden'));
+  }
+  deferredPrompt = null;
+}
+window.addEventListener('appinstalled', () => {
+  document.querySelectorAll('.install-btn').forEach(btn => btn.classList.add('hidden'));
+  deferredPrompt = null;
+});
+/* ===================================================== */
 
 let state = {
   token: localStorage.getItem('sds_token') || null,
@@ -2017,7 +2049,6 @@ function cancelEdit() {
   document.getElementById('submitBtn').textContent = '➕ Добавить запись'; document.getElementById('submitBtn').classList.remove('btn-success'); document.getElementById('submitBtn').classList.add('btn-primary');
   clearForm();
 }
-
 /* ================= ИСТОРИЯ КЛИЕНТА ================= */
 function showClientHistory(recordId) {
   const rec = crmCache.find(r => String(r.id) === String(recordId)); if (!rec) return;
@@ -2299,6 +2330,7 @@ function renderCrmTable() {
   officeSelect.innerHTML = '<option value="">Все офисы</option>' + offices.map(o => `<option value="${escapeHtml(o)}"${o === curOffice ? ' selected' : ''}>${escapeHtml(o)}</option>`).join('');
   updateSelectionBar(); setTimeout(setupTableScroll, 0);
 }
+
 /* ================= ДАШБОРД ================= */
 async function loadDashboard() {
   const status = document.getElementById('dashboardStatus'); const period = document.getElementById('dashPeriod').value;
